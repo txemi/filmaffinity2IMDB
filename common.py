@@ -1,6 +1,6 @@
 import datetime
 import threading
-import Queue
+import queue
 
 
 def progress_format(total, current):
@@ -31,21 +31,21 @@ class Eta:
         return '{} {}/{}'.format(progress_format(current=self._current, total=self._total), pend_time, tot_time)
 
 
-class CountingQueue(Queue.Queue):
+class CountingQueue(queue.Queue):
     def __init__(self, maxsize=0):
-        # Queue.Queue.__init__(**locals())
-        Queue.Queue.__init__(self, maxsize)
+        # queue.Queue.__init__(**locals())
+        queue.Queue.__init__(self, maxsize)
         self.__mycount = 0
         self.__total = 0
         self.__eta = Eta()
 
     def get(self):
-        ret = Queue.Queue.get(self)
+        ret = queue.Queue.get(self)
         self.__mycount += 1
         return ret
 
     def put(self, i):
-        Queue.Queue.put(self, i)
+        queue.Queue.put(self, i)
         self.__total += 1
 
     def get_count(self):

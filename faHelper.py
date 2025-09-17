@@ -3,9 +3,9 @@
 import re
 import sys
 
-import cookielib
+import http.cookiejar as cookielib
 import urllib
-import urllib2
+import urllib.request as urllib2
 from bs4 import BeautifulSoup
 
 import common
@@ -69,13 +69,11 @@ class FAhelper:
         self.__userName = user
         self.__userPass = password
 
-        self.__webSession.open(self.urlLogin)
-
         # Post data to Filmaffinity login URL.
         dataForm = {"postback": 1, "rp": "", "username": user,
-                    "password": password}  # a 30/10/2015 Han cambiado el formulario de login, que alegria
-        dataPost = urllib.urlencode(dataForm)
-        request = urllib2.Request(self.urlLogin, dataPost)
+                    "password": password}
+        dataPost = urllib.parse.urlencode(dataForm).encode('utf-8')
+        request = urllib2.Request(self.urlLogin, data=dataPost)
         self.__webSession.open(request)  # Our cookiejar automatically receives the cookies, after the request
 
         webResponse = self.__webSession.open(self.urlVotes)
@@ -161,7 +159,7 @@ class FAhelper:
         url = self.urlVotesID + str(self.userId) + self.urlVotesIDpageSufix + str(page)
         webResponse = self.__webSession.open(url)
         html = webResponse.read()
-        html = unicode(html, 'utf-8')
+        html = str(html)
 
         soupPage = BeautifulSoup(html, 'html.parser')
         daysDiv = soupPage.body.findAll('div', attrs={'class': 'user-ratings-wrapper'})
@@ -230,7 +228,7 @@ class FAhelper:
                 from bs4 import BeautifulSoup
                 soupPage = BeautifulSoup(html, 'html.parser')
 
-                html = unicode(html, 'utf-8')
+                html = str(html)
                 if webResponse.getcode() != 200:
                     print(webResponse.getcode())
 

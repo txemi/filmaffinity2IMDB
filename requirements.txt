@@ -1,0 +1,5 @@
+tabulate
+bs4
+selenium
+imdb
+unicodecsv

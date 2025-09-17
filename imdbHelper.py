@@ -5,9 +5,9 @@ import sys
 from difflib import SequenceMatcher as sDiff
 from xml.dom import minidom
 
-import cookielib
+import http.cookiejar as cookielib
 import urllib
-import urllib2
+import urllib.request as urllib2
 
 
 class IMDBhelper:
@@ -49,7 +49,7 @@ class IMDBhelper:
             return
 
         html = webResponse.read()
-        html = unicode(html, 'utf-8')
+        html = str(html)
 
         # Get captcha URL
         pattern = re.compile('<img src="\/widget\/captcha\?type=([\w\W]+?)"')
@@ -62,7 +62,7 @@ class IMDBhelper:
             sys.exit("Error happens, check log.")
 
         print("Type captcha form image: " + captchaURL)
-        capcha = raw_input('>')
+        capcha = input('>')
 
         pattern = re.compile('<input type="hidden" name="([\d\w]+)" value="([\d\w]+)" \/>')
         match = pattern.finditer(html)
@@ -101,10 +101,10 @@ class IMDBhelper:
                      search_year=None):
 
             try:
-                assert search_title is not None and isinstance(search_title, unicode) and len(search_title) > 0
+                assert search_title is not None and isinstance(search_title, str) and len(search_title) > 0
             except:
                 raise
-            assert search_year is not None and isinstance(search_year, unicode) and len(search_year) > 0
+            assert search_year is not None and isinstance(search_year, str) and len(search_year) > 0
 
             if result == self.Result.NO_MATCH or result == self.Result.BAD_MATCH:
                 assert code is None
@@ -115,11 +115,11 @@ class IMDBhelper:
                 if code.startswith('tt'):
                     code = code[2:]
                 assert len(code) == 7
-                assert title is not None and isinstance(title, unicode) and len(title) > 0
+                assert title is not None and isinstance(title, str) and len(title) > 0
 
                 try:
                     assert year is not None
-                    if isinstance(year, (str, unicode)):
+                    if isinstance(year, str):
                         year = int(year)
                     assert isinstance(year, int)
                 except:
@@ -207,7 +207,7 @@ class IMDBhelper:
         def getMovieUrl(self):
             assert self.__result == self.Result.MATCH or self.__result == self.Result.FORCED_MATCH
             code = self.get_code()
-            assert isinstance(code, (unicode, str))
+            assert isinstance(code, str)
             assert len(code) == 9
             assert code.startswith('tt')
             url = 'http://www.imdb.com/title/{}/'.format(code)
@@ -242,7 +242,7 @@ class IMDBhelper:
 
         urlAdrRed = webResponse.geturl()
         urlHTML = webResponse.read()
-        urlHTML = unicode(urlHTML, 'utf-8')
+        urlHTML = str(urlHTML)
 
         if urlAdrRed.find("/title/tt") != -1:
 

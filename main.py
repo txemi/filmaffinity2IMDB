@@ -349,8 +349,8 @@ class ConfigManager:
             sUser = config.imdb_user
             sPassword = config.imdb_password
         except:
-            sUser = raw_input('Please enter your FilmAffinity USER:')
-            sPassword = raw_input('Please enter your FilmAffinity PASSWORD:')
+            sUser = input('Please enter your FilmAffinity USER:')
+            sPassword = input('Please enter your FilmAffinity PASSWORD:')
         return sUser, sPassword
 
     @classmethod
@@ -361,8 +361,8 @@ class ConfigManager:
             sUser = config.fauser
             sPassword = config.fapass
         except:
-            sUser = raw_input('Please enter your FilmAffinity USER:')
-            sPassword = raw_input('Please enter your FilmAffinity PASSWORD:')
+            sUser = input('Please enter your FilmAffinity USER:')
+            sPassword = input('Please enter your FilmAffinity PASSWORD:')
         return sUser, sPassword
 
     @classmethod
@@ -373,9 +373,9 @@ class ConfigManager:
             backuptoimdb = config.matchwithimdb
         except:
             msg = 'Do you want to match with IMDB? <Y> or <N>:'
-            sIn = raw_input('\r\n{}'.format(msg))
+            sIn = input('\r\n{}'.format(msg))
             while (sIn.lower() != "y" and sIn.lower() != "n"):
-                sIn = raw_input(msg)
+                sIn = input(msg)
             if sIn.lower() == "y":
                 backuptoimdb = True
             else:
@@ -390,9 +390,9 @@ class ConfigManager:
             backuptoimdb = config.backuptoimdb
         except:
             msg = 'Do you want to backup to IMDB? <Y> or <N>:'
-            sIn = raw_input('\r\n{}:'.format(msg))
+            sIn = input('\r\n{}:'.format(msg))
             while (sIn.lower() != "y" and sIn.lower() != "n"):
-                sIn = raw_input(msg)
+                sIn = input(msg)
             if sIn.lower() == "y":
                 backuptoimdb = True
             else:
@@ -407,7 +407,7 @@ class ConfigManager:
             algorithm = config.algorithm
         except:
             msg = 'Witch algoritm do you wiant to use? {}:'.format(MatchAlgorithms.Algorithms.ALL)
-            algorithm = raw_input('\r\n{}:'.format(msg))
+            algorithm = input('\r\n{}:'.format(msg))
         return algorithm
 
 
