@@ -11,7 +11,7 @@ import urllib.request as urllib2
 
 
 class IMDBhelper:
-    """Clase para ayudar a bajar la informacion de imdb"""
+    """Helper for downloading information from imdb."""
 
     # IMDB URL set.
 
@@ -317,7 +317,7 @@ class IMDBhelper:
         for a in description:
             juju = a.childNodes[0].nodeValue[:4]
             if True or juju.isnumeric():
-                # Some times isnumeric is not working ¿unicode type problem?
+                # Sometimes isnumeric is not working -- a unicode type problem?
                 sYear = juju
                 sYear = filter(type(sYear).isdigit, sYear)
                 sYear = "0" + sYear

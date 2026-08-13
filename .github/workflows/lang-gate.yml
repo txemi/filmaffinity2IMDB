@@ -1,0 +1,58 @@
+# English-only gate.
+#
+# WHY A DORMANT REPO GETS ONE. This is public and had no language gate at all, and an audit found
+# five findings: two docstrings and a comment (translated), plus two Selenium locators that match the
+# literal Spanish link text of the site under test — those are DATA and carry `lang-ok`, because
+# translating them would break the test. That distinction is the reason a gate is better than a
+# one-off sweep: the next person cannot tell the two cases apart without being told, and a comment
+# in the file now tells them.
+#
+# CI only, no hooks: nobody commits here often enough to provision a clone, and a hook nobody has
+# wired is a wall that does not exist.
+name: lang-gate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lang:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the commit-message step needs a range to walk
+      - uses: astral-sh/setup-uv@v5
+
+      - name: English-only gate (fail-closed — the tree is at 0)
+        run: |
+          . tools/darnlang_ref.sh
+          uvx --from "$DARNLANG_REF" darnlang check --ext .py,.md,.html
+
+      # The surfaces no file gate can see, and the ones that cannot be retracted on a public repo.
+      - name: Commit messages added by this push or PR
+        run: |
+          . tools/darnlang_ref.sh
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          elif [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            RANGE="${{ github.event.after }} -1"
+          else
+            RANGE="${{ github.event.before }}..${{ github.event.after }}"
+          fi
+          # shellcheck disable=SC2086
+          git log --format=%B $RANGE > "$RUNNER_TEMP/msgs.txt"
+          uvx --from "darnlang[strict] @ $DARNLANG_REF" darnlang prose \
+            "$RUNNER_TEMP/msgs.txt" --strict --label "set of commit messages"
+
+      # Through the environment, never interpolated into `run:` — a title is attacker-controlled.
+      - name: PR title and description
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          . tools/darnlang_ref.sh
+          printf '%s\n\n%s\n' "$PR_TITLE" "$PR_BODY" > "$RUNNER_TEMP/pr.txt"
+          uvx --from "darnlang[strict] @ $DARNLANG_REF" darnlang prose \
+            "$RUNNER_TEMP/pr.txt" --strict --label "PR title/description"

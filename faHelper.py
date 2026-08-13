@@ -36,7 +36,7 @@ def changeDateString(dateBad):
 
 
 class FAhelper:
-    """Clase para ayudar a bajar la informacion de filmaffinity"""
+    """Helper for downloading information from filmaffinity."""
 
     # FA URL set.
     # urlLogin= "http://www.filmaffinity.com/en/login.php"
