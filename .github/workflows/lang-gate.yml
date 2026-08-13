@@ -42,8 +42,12 @@ jobs:
           fi
           # shellcheck disable=SC2086
           git log --format=%B $RANGE > "$RUNNER_TEMP/msgs.txt"
-          uvx --from "darnlang[strict] @ $DARNLANG_REF" darnlang prose \
-            "$RUNNER_TEMP/msgs.txt" --strict --label "set of commit messages"
+          # NO --strict here: layer 3 blocks honest English on a subject line (measured: an English
+          # subject dominated by an invented identifier comes back Tagalog at 0.86 confidence, the
+          # same score a real Spanish subject gets), and this step feeds it subjects. It keeps the
+          # PR-description step below, where the input is prose.
+          uvx --from "$DARNLANG_REF" darnlang prose \
+            "$RUNNER_TEMP/msgs.txt" --label "set of commit messages"
 
       # Through the environment, never interpolated into `run:` — a title is attacker-controlled.
       - name: PR title and description
