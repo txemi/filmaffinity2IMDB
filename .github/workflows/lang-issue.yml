@@ -20,6 +20,12 @@ on:
     types: [opened, edited]
 
 permissions:
+  # `contents: read` is NOT redundant. Declaring a `permissions:` block sets every scope you do not
+  # list to `none`, so `actions/checkout` loses its read grant and dies with a 403 -- on PRIVATE
+  # repositories only, because a public clone is anonymous. The surface this workflow exists to
+  # watch would have been watched by nothing, in silence, in exactly the repos where nobody would
+  # have noticed.
+  contents: read
   issues: write
 
 jobs:
@@ -83,7 +89,7 @@ jobs:
             # block in Markdown.
             cat > "$RUNNER_TEMP/comment.md" <<EOF
           This project is written in English throughout — code, docs, commit messages, PR titles and
-          issues (see [CONTRIBUTING.md](https://github.com/$REPO/blob/main/CONTRIBUTING.md)). This
+          issues (the repository's own conventions say so). This
           issue looks like it is in another language, so it has been labelled \`needs-english\`.
 
           Nothing is wrong with the report itself and it will be read as it stands; the label only

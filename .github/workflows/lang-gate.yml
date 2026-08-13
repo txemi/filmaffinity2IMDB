@@ -27,7 +27,7 @@ jobs:
       - name: English-only gate (fail-closed — the tree is at 0)
         run: |
           . tools/darnlang_ref.sh
-          uvx --from "$DARNLANG_REF" darnlang check --ext .py,.md,.html
+          uvx --from "$DARNLANG_REF" darnlang check --ext all
 
       # The surfaces no file gate can see, and the ones that cannot be retracted on a public repo.
       - name: Commit messages added by this push or PR
