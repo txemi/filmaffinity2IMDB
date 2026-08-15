@@ -14,6 +14,12 @@ name: lang-gate
 on:
   push:
   pull_request:
+    # `edited` is NOT decoration, and its absence is measured. GitHub's default for `pull_request`
+    # is [opened, synchronize, reopened] -- so a body typed or rewritten AFTER the pull request was
+    # opened is never judged. Under SQUASH merge the body becomes the commit message, which means
+    # the gap publishes permanent history in the wrong language while every check shows green.
+    # That is exactly how immich-autotag's ad713a7a5 got in on 2026-08-14.
+    types: [opened, edited, reopened, synchronize]
 
 jobs:
   lang:
