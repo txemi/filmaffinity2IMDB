@@ -80,7 +80,7 @@ pipeline {
             [ -n "${SECRET_SCAN_URL:-}" ] || { echo "secret scan: SECRET_SCAN_URL is not defined; failing closed" >&2; exit 1; }
             scan="$(mktemp)"
             trap 'rm -f "$scan"' EXIT
-            printf 'header = "Authorization: token %s"\n' "$API_TOKEN" | curl -fsS --config - -o "$scan" "$SECRET_SCAN_URL"
+            printf 'header = "Authorization: token %s"\\n' "$API_TOKEN" | curl -fsS --config - -o "$scan" "$SECRET_SCAN_URL"
             if [ -n "${CHANGE_TARGET:-}" ]; then
               python3 "$scan" --against "origin/${CHANGE_TARGET}"
             else
