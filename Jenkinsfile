@@ -13,12 +13,16 @@ pipeline {
       steps {
         checkout scm
         // A pull-request checkout only fetches its own head: fetch the target explicitly, because
-        // two stages below judge "what this PR adds" against it.
-        sh '''
-          if [ -n "${CHANGE_TARGET:-}" ]; then
-            git fetch --quiet origin "+refs/heads/${CHANGE_TARGET}:refs/remotes/origin/${CHANGE_TARGET}"
-          fi
-        '''
+        // two stages below judge "what this PR adds" against it. The `sh` step does NOT inherit the
+        // checkout's credential (measured: "could not read Username", rc=128, on a private repo), so
+        // git gets it through GIT_ASKPASS: never in the URL, argv or the trace.
+        withCredentials([gitUsernamePassword(credentialsId: 'scm-api-token')]) {
+          sh '''
+            if [ -n "${CHANGE_TARGET:-}" ]; then
+              git fetch --quiet origin "+refs/heads/${CHANGE_TARGET}:refs/remotes/origin/${CHANGE_TARGET}"
+            fi
+          '''
+        }
       }
     }
 
