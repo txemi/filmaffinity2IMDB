@@ -31,7 +31,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
 
       - name: English-only gate (fail-closed — the tree is at 0)
-        run: bash tools/gates/lang-gate.sh tree
+        run: bash tools/lang_gate.sh tree
 
       # The surfaces no file gate can see, and the ones that cannot be retracted on a public repo.
       # Which range and where the text comes from is decided here; how it is judged lives in the
@@ -39,13 +39,12 @@ jobs:
       - name: Commit messages added by this push or PR
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+            bash tools/lang_commits.sh "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
           elif [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-            RANGE="${{ github.event.after }} -1"
+            bash tools/lang_commits.sh --last "${{ github.event.after }}"
           else
-            RANGE="${{ github.event.before }}..${{ github.event.after }}"
+            bash tools/lang_commits.sh "${{ github.event.before }}" "${{ github.event.after }}"
           fi
-          bash tools/gates/lang-gate.sh commits "$RANGE"
 
       # Through the environment, never interpolated into `run:` — a title is attacker-controlled.
       - name: PR title and description
@@ -53,4 +52,6 @@ jobs:
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
-        run: bash tools/gates/lang-gate.sh pr-text
+        run: |
+          printf '%s\n\n%s\n' "$PR_TITLE" "$PR_BODY" > "$RUNNER_TEMP/pr.txt"
+          bash tools/lang_gate.sh pr-text "$RUNNER_TEMP/pr.txt"

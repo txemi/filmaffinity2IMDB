@@ -7,17 +7,17 @@ REQUIRED = ["fuente_de_verdad", "espejo", "respaldo_offsite", "ci"]
 try:
     import yaml
 except ImportError:
-    print("check-repo-policy: PyYAML is missing on this agent, so the file cannot be parsed. "
+    print("repo_policy_check: PyYAML is missing on this agent, so the file cannot be parsed. "
           "This is NOT a pass.", file=sys.stderr)
     sys.exit(1)
 
 try:
     data = yaml.safe_load(open("repo_policy.yaml", encoding="utf-8")) or {}
 except FileNotFoundError:
-    print("check-repo-policy: repo_policy.yaml is missing at the repo root", file=sys.stderr)
+    print("repo_policy_check: repo_policy.yaml is missing at the repo root", file=sys.stderr)
     sys.exit(1)
 missing = [k for k in REQUIRED if k not in data]
 if missing:
-    print(f"check-repo-policy: required sections missing: {missing}", file=sys.stderr)
+    print(f"repo_policy_check: required sections missing: {missing}", file=sys.stderr)
     sys.exit(1)
-print("check-repo-policy: repo_policy.yaml parses and has " + ", ".join(REQUIRED) + ".")
+print("repo_policy_check: repo_policy.yaml parses and has " + ", ".join(REQUIRED) + ".")
