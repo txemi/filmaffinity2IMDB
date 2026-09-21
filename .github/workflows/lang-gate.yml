@@ -31,14 +31,13 @@ jobs:
       - uses: astral-sh/setup-uv@v5
 
       - name: English-only gate (fail-closed — the tree is at 0)
-        run: |
-          . tools/darnlang_ref.sh
-          uvx --from "$DARNLANG_REF" darnlang check --ext all
+        run: bash tools/gates/lang-gate.sh tree
 
       # The surfaces no file gate can see, and the ones that cannot be retracted on a public repo.
+      # Which range and where the text comes from is decided here; how it is judged lives in the
+      # script, which Jenkins calls too.
       - name: Commit messages added by this push or PR
         run: |
-          . tools/darnlang_ref.sh
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
           elif [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
@@ -46,14 +45,7 @@ jobs:
           else
             RANGE="${{ github.event.before }}..${{ github.event.after }}"
           fi
-          # shellcheck disable=SC2086
-          git log --format=%B $RANGE > "$RUNNER_TEMP/msgs.txt"
-          # NO --strict here: layer 3 blocks honest English on a subject line (measured: an English
-          # subject dominated by an invented identifier comes back Tagalog at 0.86 confidence, the
-          # same score a real Spanish subject gets), and this step feeds it subjects. It keeps the
-          # PR-description step below, where the input is prose.
-          uvx --from "$DARNLANG_REF" darnlang prose \
-            "$RUNNER_TEMP/msgs.txt" --label "set of commit messages"
+          bash tools/gates/lang-gate.sh commits "$RANGE"
 
       # Through the environment, never interpolated into `run:` — a title is attacker-controlled.
       - name: PR title and description
@@ -61,8 +53,4 @@ jobs:
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
-        run: |
-          . tools/darnlang_ref.sh
-          printf '%s\n\n%s\n' "$PR_TITLE" "$PR_BODY" > "$RUNNER_TEMP/pr.txt"
-          uvx --from "darnlang[strict] @ $DARNLANG_REF" darnlang prose \
-            "$RUNNER_TEMP/pr.txt" --strict --label "PR title/description"
+        run: bash tools/gates/lang-gate.sh pr-text
