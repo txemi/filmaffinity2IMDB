@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Check that repo_policy.yaml exists at the repo root, parses, and has the four required sections."""
+"""Check that repo_policy.yaml exists at the repo root, parses, and has the three required sections.
+
+A public repo does not publish `ci` in repo_policy.yaml (it stays in the private governance repo), so `ci`
+is not required here."""
 import sys
 
-REQUIRED = ["fuente_de_verdad", "espejo", "respaldo_offsite", "ci"]
+REQUIRED = ["fuente_de_verdad", "espejo", "respaldo_offsite"]
 
 try:
     import yaml
@@ -20,7 +23,7 @@ if not isinstance(data, dict):
     print("repo_policy_check: repo_policy.yaml must be a mapping of sections, not a list or a scalar",
           file=sys.stderr)
     sys.exit(1)
-# A key with no value (`ci:`) parses to None: present, but it declares nothing.
+# A key with no value (`espejo:`) parses to None: present, but it declares nothing.
 missing = [k for k in REQUIRED if not isinstance(data.get(k), dict) or not data[k]]
 if missing:
     print(f"repo_policy_check: required sections missing or empty: {missing}", file=sys.stderr)
