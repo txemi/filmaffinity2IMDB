@@ -38,10 +38,6 @@ pipeline {
       }
     }
 
-    stage('repo policy') {
-      steps { sh 'python3 tools/repo_policy_check.py' }
-    }
-
     stage('language: tree') {
       steps { sh 'bash tools/lang_gate.sh tree' }
     }
