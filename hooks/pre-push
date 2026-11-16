@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Versioned git pre-push hook: the darnlink whole-repo link wall, offline (the web check needs the
+# network and runs only in Jenkins). Config: darnlink-gate.json. Active once `git config core.hooksPath hooks`.
+# Without darnlink-gate on the PATH it skips: Jenkins covers it.
+set -euo pipefail
+command -v darnlink-gate >/dev/null 2>&1 || { echo "darnlink pre-push: darnlink-gate not on PATH -> SKIP (Jenkins covers it)." >&2; exit 0; }
+export DARNLINK_GATE_WEB=0
+exec darnlink-gate

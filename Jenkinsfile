@@ -42,6 +42,12 @@ pipeline {
       steps { sh 'bash tools/lang_gate.sh tree' }
     }
 
+    stage('darnlink-gate') {
+      // The link wall at its strictest (mode max, dangling repo, web check), fail-closed. The recipe is
+      // the public one pinned in darnlink-gate.json; the script verifies its checksum before running it.
+      steps { sh 'bash tools/darnlink_gate.sh' }
+    }
+
     stage('language: commit messages') {
       steps {
         sh '''

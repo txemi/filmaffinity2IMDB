@@ -1,0 +1,18 @@
+{
+  "ref": "git+https://github.com/txemi/darnlink@84e2db4db1055a0fedd6b7a2c826269f282c9d26",
+  "ref_tag": "v0.30.0",
+  "ref_comment": "v0.30.0 (published tag, commit 84e2db4) — pinned by SHA: uvx resolves a tag over the network on every call (5-8 s vs 0.1 s).",
+  "recipe_sha256": "47354c3a3b5e145bac3207a8869a63f8fc932f91512ae02d2a801a58535cabfd",
+  "excludes": [
+    ".venv",
+    ".git",
+    "node_modules",
+    "worktrees"
+  ],
+  "mode": "max",
+  "scope": "repo",
+  "web": true,
+  "dangling": "repo",
+  "dangling_max": 0,
+  "default_branch": "master"
+}
