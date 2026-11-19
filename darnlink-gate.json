@@ -1,8 +1,8 @@
 {
-  "ref": "git+https://github.com/txemi/darnlink@84e2db4db1055a0fedd6b7a2c826269f282c9d26",
-  "ref_tag": "v0.30.0",
-  "ref_comment": "v0.30.0 (published tag, commit 84e2db4) — pinned by SHA: uvx resolves a tag over the network on every call (5-8 s vs 0.1 s).",
-  "recipe_sha256": "47354c3a3b5e145bac3207a8869a63f8fc932f91512ae02d2a801a58535cabfd",
+  "ref": "git+https://github.com/txemi/darnlink@1d19e473e7924303f029eb90917ae5bc93ddb099",
+  "ref_tag": "v0.33.1",
+  "ref_comment": "v0.33.1 (published tag, commit 1d19e47; ships vars/darnlinkGate.groovy and has no symlinks, which Jenkins rejects in a library: darnlink#40) — pinned by SHA: uvx resolves a tag over the network on every call. RULE: only the SHA of a published TAG is pinned, never a loose commit",
+  "recipe_sha256": "cee7969d6d2ab6771aff2a9e664b033965258ee82bc5ee180ee1f3992b252f5f",
   "excludes": [
     ".venv",
     ".git",
