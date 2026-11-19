@@ -1,0 +1,27 @@
+{
+  "$schema": "schemas/schema_declared.schema.json",
+  "$comment": "Manifest of the schema walls (schema-declared and schema-valid): which YAML or JSON files of this repo declare no schema, and why. Born on 2026-11-19 with every such file in `pending`, so nothing is cut on day one. `pending` only shrinks.",
+  "exempt": [],
+  "pending": [
+    {
+      "glob": ".darnlang-baseline.json",
+      "reason": "written by the `darnlang` baseline tool, which never adds a `$schema` line; an exact path would cut its next commit"
+    },
+    {
+      "glob": ".github/workflows/lang-gate.yml",
+      "reason": "no schema declared yet when the wall was adopted: declare one, or move it to `exempt` with its reason if no schema exists for it"
+    },
+    {
+      "glob": ".github/workflows/lang-issue.yml",
+      "reason": "no schema declared yet when the wall was adopted: declare one, or move it to `exempt` with its reason if no schema exists for it"
+    },
+    {
+      "glob": ".vscode/launch.json",
+      "reason": "no schema declared yet when the wall was adopted: declare one, or move it to `exempt` with its reason if no schema exists for it"
+    },
+    {
+      "glob": "darnlink-gate.json",
+      "reason": "no schema declared yet when the wall was adopted: declare one, or move it to `exempt` with its reason if no schema exists for it"
+    }
+  ]
+}
